@@ -1,3 +1,21 @@
+/*
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with CCP driver.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Created on: Sep 9, 2017
+ *      Author: Matthias Baumann
+ */
+
 #include "testscenarios.h"
 
 /*******************************************************************************************
@@ -8,29 +26,31 @@
 int check_T01_comment (std::string& one_line_from_xml_file)
 {
 
-       /* Es beginnt die Überprüfung ob es in dieser Zeile einen folständigen Kommentar gibt.*/
+       /* It is checked if one line has at least one complete comment*/
         std::string::size_type pos_start_comment = one_line_from_xml_file.find("/*");
         std::string::size_type pos_end_comment = one_line_from_xml_file.find("*/");
 
         if(    pos_start_comment == std::string::npos
             || pos_end_comment   == std::string::npos)
         {
-            // Es entweder keine Zeichenfolge gefunden werden welche auf den Start oder das Ende
-            // Ende eines Kommentars hinweist.
+            std::cerr << "Error[-101]: The tag of the start of a comment or the tag for the end of"
+                      << "a comment had not been found." << std::endl;
             return -101;
         }
-        // Suche nach einem weiteren Kommentar in der Zeile.
+        // It is checked if one line does have two comments
         std::string::size_type pos_second_start_comment = one_line_from_xml_file.find("/*", pos_start_comment +1);
         std::string::size_type pos_second_end_comment = one_line_from_xml_file.find("*/", pos_end_comment +1);
         if(    pos_second_start_comment != std::string::npos
             || pos_second_end_comment   != std::string::npos)
         {
-            // Es mehr als eine Zeichenfolge welche den Start und/oder den Stop für einen
-            // eines Kommentars gefunden ("/*" "*/")
+            std::cerr << "Error[-103]:More than one tag for for starting or ending a comment had"
+                      << " been found." << std::endl;
+
             return -102;
+
         }
 
-        return 0; // Test erfolgreich
+        return 0; // Test successfull
 
 }
 
@@ -43,18 +63,24 @@ int check_T01_comment (std::string& one_line_from_xml_file)
 
 int check_T02_one_comment(std::string& one_line_from_xml_file)
 {
- /* Es soll kontrolliert werden ob sich der Kommentar am Ende der Zeile befindet */
+    /*
+     * It is checked whether the comment is located at the end of the line.
+     */
 
     std::string::size_type pos_start_comment = one_line_from_xml_file.find("/*");
     std::string::size_type pos_end_comment = one_line_from_xml_file.find("*/");
     size_t number_of_character = one_line_from_xml_file.length();
     for(size_t pos_idx = pos_end_comment + 2 ; pos_idx < number_of_character; pos_idx++)
     {
-        if(one_line_from_xml_file.at(pos_idx) !=' ')
+        if(    (one_line_from_xml_file.at(pos_idx) !=' ' )
+            && (one_line_from_xml_file.at(pos_idx) !='\t') )
         {
-            // Das Schlüsselwort $CCP hat hinter dem Ende des Kommentars weitere druckbare
-            // Zeichen
-            return -301;
+
+            std::cerr << "Error[-201]: It had been checked if additional characters are located"
+                      << "in the same line fo the comment and right behind the tag for ending the"
+                      << " comment (only space and tab are allowed after the end of the comment)."
+                      << std::endl;
+            return -201;
         }
 
     }
@@ -71,32 +97,33 @@ int check_T02_one_comment(std::string& one_line_from_xml_file)
 int check_T03_semicolon(std::string& one_line_from_xml_file)
 {
     /*
-     * Es soll kontrolliert werden ob sich for dem Kommentarstart ein Semikolon befindet
-     * und das nur maximal ein Selmikolon in der Zeile steht.
+     * It shall be checked if the a semikolon is located before the start tag of the comment
+     * Furthermore shall also be checked if the there is only one semikolon in the line.
      */
     std::string::size_type pos_start_comment = one_line_from_xml_file.find("/*");
     std::string::size_type pos_end_comment = one_line_from_xml_file.find("*/");
     size_t pos_semicolon = one_line_from_xml_file.find(";");
     if(pos_semicolon == std::string::npos)
     {
-        // Es wurde kein Semikolon in der Zeile gefunden. Die CCP-Markierung kann somit mit
-        // keiner Variable in Verbindung gebracht werden.
+
+        std::cerr << "Error[-301]:No semikolon had been found in the line of the $CCP tag. The tag "
+                  << "can therefore not be referenced to a variable." << std::endl;
         return -301;
     }
 
-    // Überprüfe ob sich das Semikolon vor dem Kommentar befindet.
+    // Check if the semikolon is located before the comment
     if(pos_semicolon > pos_start_comment)
     {
-        // Das erst Semikolon befindet sich innerhalb des Kommentares
-        // Die CCP variable kann nicht weiter untersucht werden.
+        std::cerr << "Error[-302]:The first semikolon is located inside the comment."
+                  << "The CCP variable information can't be extracted." << std::endl;
         return -302;
     }
-    // Suche nach einem weiteren Semikolon in der Zeile.
+    // Check of another semikolon in the same line
     pos_semicolon = one_line_from_xml_file.find(";", pos_semicolon +1);
     if(pos_semicolon != std::string::npos)
     {
-        // Es wurde ein weiteres Semikolon in der Zeile gefunden. Zwei Anweisungen in
-        // einer Zeile sind nicht erlaubt für $CPP-Markierungen.
+        std::cerr << "Error[-303]:More than one semikolon had been found in the same line. Two"
+                  << "instructions in one line can not be checked by Stockente." << std::endl;
         return -303;
     }
 
@@ -187,42 +214,45 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
 
     if(datatypes_found == 0)
     {
-        // Kein Datentyp wurde in der Anweisung gefunden
+        std::cerr << "Error[-501]:Datatype could not be found inside the instruction" << std::endl;
         return -501;
     }
      if(datatypes_found > 1)
     {
-        // Zu viele Datentypen wurden in der Anweisung gefunden.
+        std::cerr << "Error[-502]:To many datatypes had been found inside the instruction"
+                  << std::endl;
         return -502;
     }
 
-    //Finde die Position des Leerzeichens welches nach dem Datentyp folgt.
+    //Find the location of the space character which is right befind the datatype.
 
     pos_variablename = instruction.find(" ",pos_datatype + 1);
     pos_variablename = instruction.find_first_not_of(" ",pos_variablename);
     if(pos_variablename == std::string::npos)
     {
-        // Die Position des Variablennames konnte nicht in der Anweisung gefunden werden.
+        std::cerr << "Error[-503]:Die Position des Variablennames konnte nicht in der Anweisung gefunden werden." << std::endl;
         return -503;
     }
 
 
     /*
-     *Finde das Ende des Variablennames. Nach einem Variablennamen folgt generell entwerden:
+     * Find the end of the variable name. right behind the variable name is always one of the
+     * following signs:
      *
-     *  ;  [  =  Leerzeichen
+     *  ;  [  =  Space
      */
     pos_semicolon = instruction.find(";",pos_variablename);
     if(pos_semicolon == std::string::npos)
     {
-        // Kein Semikolon konnte in der Anweisung gefunden werden.
+        std::cerr << "Error[-504]:The instruction does not contain a semikolon." << std::endl;
         return -504;
     }
 
     std::string::size_type pos_array = instruction.find("[",pos_variablename);
     if(pos_array !=  std::string::npos)
     {
-        // Die CCP variable beschreibt ein Array welche im Augenblick nicht unterstützt werden.
+        std::cerr << "Error[-505]:The CCP variable found is defining an array which is "
+                  << " currently not supported." << std::endl;
         return -505;
     }
 
@@ -242,12 +272,14 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
 
     if(pos_endvarname == std::string::npos)
     {
-        // Das Ende des Variablennamens konnte nicht bestimmt werden.
+        std::cerr << "Error[-506]:Das Ende des Variablennamens konnte nicht bestimmt werden."
+                  << std::endl;
         return -506;
     }
     if(pos_endvarname < pos_variablename)
     {
-        // Das Ende des Variablennames scheint vor dem Anfang zu sein. Es gibt die Matrix!
+        std::cerr << "Error[-507]:Something strange happens the variable name ends before it"
+                  << " starts. Magic!" << std::endl;
         return -507;
     }
 
@@ -258,7 +290,7 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
 
 /*******************************************************************************************
  *
- * Function 06 - find out if the description as a min value
+ * Function 06 - find out if the min or max value
  *
  ******************************************************************************************/
 
@@ -278,28 +310,40 @@ int check_T06_extract_thres(std::string& str_comment,ECU_variable& tmp_variable,
             pos_search_element = pos_start_max;
             break;
         default:
-            // Programmierfehler falscher Wert wurde als 3 Element übergeben.
+            std::cerr << "Error[-602]:Program failure. Wrong value handed over for the "
+                      << "third element."<< std::endl;
             return -603;
     }
 
     if(pos_search_element == std::string::npos)
     {
-        // Das Schlüsselwort min: konnte nicht gefunden werden.
+        // The tag "min:" could not be fouond.
         return -601;
     }
     std::string::size_type pos_start_value = str_comment.find_first_of("-1234567890.",pos_search_element);
     std::string::size_type pos_end_value = str_comment.find_first_not_of("-1234567890.",pos_start_value);
 
-    // TODO verschiedenste Überprüfungen hinzufügen
+    // TODO different checks need to be added.
     if( pos_start_value == std::string::npos || pos_end_value == std::string::npos)
     {
-        // Der Anfang oder das Ende der Zeichenfolge, welche den Zahlenwert beschreibt konnte
-        // nicht gefunden werden.
-        std::cout << "Kein minimaler Wert wurde mit angegeben." << std::endl;
+        std::cerr << "Error[-602]:The start or the end of the string, describing the value, could"
+                  << "not be found." << std::endl;
         return -602;
     }
 
     std::string str_value = str_comment.substr(pos_start_value,pos_end_value - pos_start_value);
+
+    try
+    {
+        std::stoll(str_value);
+        std::stof(str_value);
+    }
+    catch(...)
+    {
+        std::cerr << "Error[-604]:The string which should be the min or max value could not be "
+                  << "converted into a number." << std::endl;
+        return -604;
+    }
 
     switch(element)
     {
@@ -314,7 +358,7 @@ int check_T06_extract_thres(std::string& str_comment,ECU_variable& tmp_variable,
             tmp_variable.str_MaxValue = str_value;
             break;
         default:
-            // Programmierfehler falscher Wert wurde als 3 Element übergeben.
+            std::cerr << "Error[-603]:Programming failure" << std::endl;
             return -603;
     }
 
@@ -335,16 +379,81 @@ int check_T07_extract_comment(std::string& one_line_from_xml_file,std::string& s
     std::string::size_type pos_end_comment = one_line_from_xml_file.find("*/");
     if(pos_start_comment == std::string::npos)
     {
-        // Es konnte nicht die Zeichenfolge für den Start eines Kommentars gefunden werden
+        std::cerr << "Error[-701]:No Tag found describing the start of the comment."<< std::endl;
         return -701;
     }
     if(pos_end_comment == std::string::npos)
     {
-        // Es konnte nicht die Zeichenfolge für das Ende eines Kommentars gefunden werden
+        std::cerr << "Error[-702]:No Tag found describing the e of the comment."<< std::endl;
         return -702;
     }
-    // Die +2 in nächsten Codezeile bezwecken das auch die Zeichenfolge für das Ende des Kommentars mit aufgenommen wird
+    // The +2 at the end of the next source code line is use to include the tag for the end of the
+    // comment.
     str_comment = one_line_from_xml_file.substr(pos_start_comment,pos_end_comment-pos_start_comment+2);
 
+    return 0;
+}
+
+/*******************************************************************************************
+ *
+ * Function 08 - find out the unit or the description
+ *
+ ******************************************************************************************/
+
+int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_variable, EnumSearchEle element)
+{
+
+    std::string::size_type pos_start_unit = str_comment.find("unit:");
+    std::string::size_type pos_start_des = str_comment.find("des:");
+    std::string::size_type pos_search_element;
+    switch(element)
+    {
+        case unit_value:
+            pos_search_element = pos_start_unit;
+            break;
+        case des_value:
+            pos_search_element = pos_start_des;
+            break;
+        default:
+            // Programming failure the wrong value had been handed over as the third element.
+            std::cerr << "Error[-803]: functioncall with wrong element. Only the enum unit_value or"
+                      << "des_value makes sense" << std::endl;
+            return -803;
+    }
+
+    if(pos_search_element == std::string::npos)
+    {
+        // The tag "min:" could not be found.
+        return -801;
+    }
+    std::string::size_type pos_start_value = str_comment.find_first_of('"',pos_search_element);
+    pos_start_value = pos_start_value +1; //First char beginns with a '
+    std::string::size_type pos_end_value = str_comment.find_first_of('"',pos_start_value);
+
+    // TODO add additional checks
+    if( pos_start_value == std::string::npos || pos_end_value == std::string::npos)
+    {
+        // Der Anfang oder das Ende der Zeichenfolge, welche den Zahlenwert beschreibt konnte
+        // nicht gefunden werden.
+        std::cerr << "Error[-802]:No high comma which should be located before and after the  Unit/Des."
+                  << std::endl;
+        return -802;
+    }
+
+    std::string str_value = str_comment.substr(pos_start_value,pos_end_value - pos_start_value);
+
+    switch(element)
+    {
+        case unit_value:
+            tmp_variable.SetUnit(str_value);
+            break;
+        case des_value:
+            tmp_variable.SetDescription(str_value);
+            break;
+        default:
+            std::cerr << "Error[-803]: function call with wrong element. Only the enum unit_value or"
+                      << "des_value makes sense" << std::endl;
+            return -803;
+    }
     return 0;
 }

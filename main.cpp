@@ -1,3 +1,21 @@
+/*
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with CCP driver.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Created on: Sep 9, 2017
+ *      Author: Matthias Baumann
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -16,7 +34,7 @@ int main(int argc, char *argv[])
     if(argc < 2 )
     {
 
-        // Die falsche Anzahl von Argumenten wurde der Funktion mit übergeben.
+        // The wrong number of arguments had been handed over with the function call
         std::cerr << "No Argument found." << std::endl;
         return 1;
     }
@@ -35,29 +53,29 @@ int main(int argc, char *argv[])
             git_checksum = "Checksum only known for a release";
         }
         // Die falsche Anzahl von Argumenten wurde der Funktion mit übergeben.
-        std::cout << "------------Program: Stockente----------------" << std::endl
+        std::cout << "------------Program: Stockente-------------------------" << std::endl
                   << "Version      : " << git_version << std::endl
                   << "Git-Checksum : " << git_checksum <<std::endl
-                  << "----------------------------------------------" << std::endl;
+                  << "-------------------------------------------------------" << std::endl;
         return 0;
     }
 
     if(argc == 3)
     {
-        // Überprüfe ob das erst Argument eine Datei beschreibt welche auch geäffnet werden kann.
+        // Check if the first argument is path to a file which can be opened.
 
         std::ifstream testf(argv[1]);
         if( testf.good() == true)
             testf.close();
         else
         {
-            std::cerr << "Das erste Argument war leider keine Datei welche geöffnet werden konnte.";
+            std::cerr << "The first argument was not a file which could be opened.";
             return 4;
         }
 
         // Try to open the CPP file handed over with the first argument
         files_to_scan.push_back(argv[1]);
-        // Datei in welcher die Ergebnisse gespeichert werden sollen
+        // File to save the result in.
         result_file_name = argv[2];
     }
     else
@@ -82,14 +100,14 @@ int main(int argc, char *argv[])
                 switch (argtype)
                 {
                     case 0:
-                        std::cerr << "Ein unerwartetes Argument wurde übergeben" << std::endl;
+                        std::cerr << "A unexpected argument had been entered in the function call" << std::endl;
                         return 6;
                     case 1:
                         result_file_name = arg;
                         cnt_target++;
                         if(cnt_target > 1)
                         {
-                            std::cerr << "Zu viele Zieldateien wurden angegeben" << std::endl;
+                            std::cerr << "To many targetfiles had been defined inside the arguements" << std::endl;
                         }
                         break;
                     case 2:
@@ -97,7 +115,7 @@ int main(int argc, char *argv[])
                         cnt_map++;
                         if(cnt_map > 1)
                         {
-                            std::cerr << "Zu viele Mapdateien wurden angegeben" << std::endl;
+                            std::cerr << "The function calll is only possible with one map file, but more than one had been defined inside the argument list." << std::endl;
                             return 7;
                         }
                         {
@@ -106,7 +124,7 @@ int main(int argc, char *argv[])
                                 testf.close();
                             else
                             {
-                                std::cerr << "Mapdatei konnte nicht geöffnet werden: " << arg << std::endl;
+                                std::cerr << "Mapfile could not be opened: " << arg << std::endl;
                                 return 8;
                             }
                         }
@@ -122,12 +140,12 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                std::cerr << "Quelltextdatei konnte nicht geöffnet werden: " << arg << std::endl;
+                                std::cerr << "Source file could not be opened: " << arg << std::endl;
                             }
                         }
                         break;
                     default:
-                        std::cerr << "Programmierfehler" << std::endl;
+                        std::cerr << "Stockente, Bug detected." << std::endl;
                         return 9;
                         break;
 
@@ -182,6 +200,8 @@ int main(int argc, char *argv[])
             // Überprüfe den Kommentar
             check_T06_extract_thres(str_comment,*tmp_variable,min_value);
             check_T06_extract_thres(str_comment,*tmp_variable,max_value);
+            check_T08_extract_str_element(str_comment,*tmp_variable,unit_value);
+            check_T08_extract_str_element(str_comment,*tmp_variable,des_value);
             if(result !=0)
                 delete(tmp_variable);
             else
@@ -201,62 +221,67 @@ int main(int argc, char *argv[])
      * Extract the information from the map file
      *
      ******************************************************************************************/
-
-    std::cout << "Start to analyse the map file: " << map_file_name << std::endl;
-    std::ifstream map_file(map_file_name);
-    if ( ! map_file)
+    if(!map_file_name.empty())
     {
-        std::cerr << "Mapfile could not be opened" << std::endl;
-        return 2;
-    }
-
-    std::string one_line_from_map_file;
-
-    for(unsigned int idx_m = 0; idx_m < CCP_Variables.size(); idx_m++)
-    {
-        // Reset the file to the beginning- TODO could be better
-        map_file.close();
+        std::cout << "Start to analyse the map file: " << map_file_name << std::endl;
         std::ifstream map_file(map_file_name);
-        //
-        ECU_variable* tmp_ECU_variable;
-        tmp_ECU_variable = &CCP_Variables.at(idx_m);
-        while(std::getline(map_file, one_line_from_map_file))
+        if ( ! map_file)
         {
+            std::cerr << "Mapfile could not be opened" << std::endl;
+            return 2;
+        }
 
-            std::string::size_type pos_name;
-            std::string::size_type pos_start_address;
-            std::string::size_type pos_end_address;
-            pos_name = one_line_from_map_file.find(tmp_ECU_variable->GetName());
-            if (pos_name == std::string::npos)
-            {
-                //std::cout << "not found\n";
-            }
-            else
-            {
-                // CCP Tag found start to analyse the file.
-                pos_start_address = one_line_from_map_file.find("0x");
-                pos_end_address = one_line_from_map_file.find(" ", pos_start_address);
+        std::string one_line_from_map_file;
 
-                if(pos_start_address != std::string::npos
-                   && pos_start_address < pos_name)
+        for(unsigned int idx_m = 0; idx_m < CCP_Variables.size(); idx_m++)
+        {
+            // Reset the file to the beginning- TODO could be better
+            map_file.close();
+            std::ifstream map_file(map_file_name);
+            //
+            ECU_variable* tmp_ECU_variable;
+            tmp_ECU_variable = &CCP_Variables.at(idx_m);
+            while(std::getline(map_file, one_line_from_map_file))
+            {
+
+                std::string::size_type pos_name;
+                std::string::size_type pos_start_address;
+                std::string::size_type pos_end_address;
+                pos_name = one_line_from_map_file.find(tmp_ECU_variable->GetName());
+                if (pos_name == std::string::npos)
                 {
-                    // Addresse wurde gefunden
-                    std::string str_address = one_line_from_map_file.substr(pos_start_address,pos_end_address);
-                    unsigned long address = std::stoul(str_address,nullptr,0);
-                    tmp_ECU_variable->SetAddress((uint32_t)(address) );
+                    //std::cout << "not found\n";
+                }
+                else
+                {
+                    // CCP Tag found start to analyse the file.
+                    pos_start_address = one_line_from_map_file.find("0x");
+                    pos_end_address = one_line_from_map_file.find(" ", pos_start_address);
 
+                    if(pos_start_address != std::string::npos
+                       && pos_start_address < pos_name)
+                    {
+                        // Address found
+                        std::string str_address = one_line_from_map_file.substr(pos_start_address,pos_end_address);
+                        unsigned long address = std::stoul(str_address,nullptr,0);
+                        tmp_ECU_variable->SetAddress((uint32_t)(address) );
+
+                    }
                 }
             }
 
-        }
-
-        if(map_file.is_open())
-        {
-            map_file.close();
+            if(map_file.is_open())
+            {
+                map_file.close();
+            }
         }
 
     }
-
+    else
+    {
+        std::cout << "No map file handed over as an argument. XML-File will be created without the"
+                  << "the addresses (all adresses zero)" << std::endl;
+    }
     /*******************************************************************************************
      *
      * Print the written into a xmlfile
@@ -317,15 +342,35 @@ int main(int argc, char *argv[])
         {
         XMLElement * pDes = xmlDoc.NewElement("description");
             pVariable->InsertEndChild(pDes);
+            std::string tmp_str = tmp_ECU_variable->GetDescription();
+            pDes->SetText(tmp_str.c_str());
         }
         if(!tmp_ECU_variable->str_Unit.empty())
         {
         XMLElement * pUnit = xmlDoc.NewElement("unit");
             pVariable->InsertEndChild(pUnit);
+            std::string tmp_str = tmp_ECU_variable->GetUnit();
+            pUnit->SetText(tmp_str.c_str());
         }
     }
 
     XMLError eResult = xmlDoc.SaveFile(result_file_name.c_str());
 
+    /* Start to print the results of the program execution */
+    std::cout << std::endl << std::endl;
+    std::cout << "------------Results------------------------------------" << std::endl;
+    std::cout << "Number of CCP Variables: " << CCP_Variables.size() << std::endl;
+    if(eResult == 0)
+    {
+        std::cout << "The VarFile creating was successful" << std::endl;
+        std::cout << "New Varfile: "  << result_file_name << std::endl;
+    }
+    else{
+        std::cout << "The VarFile creating was not successful" << std::endl;
+        std::cerr << "Error[-001]:TinyXML could not save to the target file. "
+                  << "TinyXML returns the follwing ErrorCode: "<< eResult
+                  << " The file that should have been created is: " << result_file_name<< std::endl;
+    }
+    std::cout << "------------END----------------------------------------" << std::endl;
     return 0;
 }
