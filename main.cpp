@@ -13,11 +13,33 @@ int main(int argc, char *argv[])
     std::string result_file_name;
     std::string map_file_name;
 
-    if(argc < 3 )
+    if(argc < 2 )
     {
+
         // Die falsche Anzahl von Argumenten wurde der Funktion mit übergeben.
-        std::cerr << "Die Anzahl der Argumente sollte 2 oder 3 betragen." << std::endl;
+        std::cerr << "No Argument found." << std::endl;
         return 1;
+    }
+
+    if(argc == 2 )
+    {
+        std::string arg = argv[1];
+        std::string str_target = "-v";
+        std::string git_version;
+        std::string git_checksum;
+
+
+        if (arg.compare(str_target) == 0)
+        {
+            git_version  = "Version  only known for a release";
+            git_checksum = "Checksum only known for a release";
+        }
+        // Die falsche Anzahl von Argumenten wurde der Funktion mit übergeben.
+        std::cout << "------------Program: Stockente----------------" << std::endl
+                  << "Version      : " << git_version << std::endl
+                  << "Git-Checksum : " << git_checksum <<std::endl
+                  << "----------------------------------------------" << std::endl;
+        return 0;
     }
 
     if(argc == 3)
