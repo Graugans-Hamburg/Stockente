@@ -239,7 +239,7 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
      * Find the end of the variable name. right behind the variable name is always one of the
      * following signs:
      *
-     *  ;  [  =  Space
+     *  ;  [  =  Space '\t'
      */
     pos_semicolon = instruction.find(";",pos_variablename);
     if(pos_semicolon == std::string::npos)
@@ -258,17 +258,21 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
 
     std::string::size_type pos_equal = instruction.find("=",pos_variablename);
     std::string::size_type pos_whitespace = instruction.find(" ",pos_variablename);
+    std::string::size_type pos_tab = instruction.find('\t',pos_variablename);
 
     if(pos_semicolon < pos_array)
         pos_endvarname = pos_semicolon - 1;
     else
         pos_endvarname = pos_array - 1;
 
-    if(pos_equal < pos_endvarname)
+    if(pos_equal <= pos_endvarname)
         pos_endvarname = pos_equal - 1;
 
-    if(pos_whitespace < pos_endvarname)
+    if(pos_whitespace <= pos_endvarname)
         pos_endvarname = pos_whitespace - 1;
+
+    if(pos_tab <= pos_endvarname)
+        pos_endvarname = pos_tab - 1;
 
     if(pos_endvarname == std::string::npos)
     {

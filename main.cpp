@@ -172,8 +172,10 @@ int main(int argc, char *argv[])
         std::string one_line_from_xml_file;
         std::string instruction;
         std::string str_comment;
+        int source_code_line = 0;
         while(std::getline(src_code_file, one_line_from_xml_file))
         {
+            source_code_line++;
 
             std::string::size_type n;
             n = one_line_from_xml_file.find("$CCP");
@@ -197,11 +199,20 @@ int main(int argc, char *argv[])
             result = check_T05_get_var_properties(instruction,*tmp_variable);
             if(result >= 0)
             result = check_T07_extract_comment(one_line_from_xml_file, str_comment);
-            // Überprüfe den Kommentar
+            // Check the comment for the thresholds and the description and the unit
+            if(result >= 0)
             check_T06_extract_thres(str_comment,*tmp_variable,min_value);
+            if(result >= 0)
             check_T06_extract_thres(str_comment,*tmp_variable,max_value);
+            if(result >= 0)
             check_T08_extract_str_element(str_comment,*tmp_variable,unit_value);
+            if(result >= 0)
             check_T08_extract_str_element(str_comment,*tmp_variable,des_value);
+            if(result < 0)
+            {
+                std::cout << "   Error detected in file: " << files_to_scan.at(idx_j) << std::endl;
+                std::cout << "   Error detected in line: " << source_code_line << std::endl << std::endl;
+            }
             if(result !=0)
                 delete(tmp_variable);
             else
@@ -280,7 +291,7 @@ int main(int argc, char *argv[])
     else
     {
         std::cout << "No map file handed over as an argument. XML-File will be created without the"
-                  << "the addresses (all adresses zero)" << std::endl;
+                  << " addresses (all adresses zero)" << std::endl;
     }
     /*******************************************************************************************
      *
@@ -362,7 +373,7 @@ int main(int argc, char *argv[])
     std::cout << "Number of CCP Variables: " << CCP_Variables.size() << std::endl;
     if(eResult == 0)
     {
-        std::cout << "The VarFile creating was successful" << std::endl;
+        std::cout << "The VarFile creation was successful" << std::endl;
         std::cout << "New Varfile: "  << result_file_name << std::endl;
     }
     else{
