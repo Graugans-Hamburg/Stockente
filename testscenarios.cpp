@@ -248,7 +248,7 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
     //Find the location of the space character which is right befind the datatype.
 
     pos_variablename = instruction.find(" ",pos_datatype + 1);
-    pos_variablename = instruction.find_first_of(VARRIABLE_CHARACTER_FIRST_LETTER,pos_variablename);
+    pos_variablename = instruction.find_first_of(character_allowed_as_first_letter,pos_variablename);
 
     if(pos_variablename == std::string::npos)
     {
@@ -278,7 +278,7 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
         return -505;
     }
 
-    pos_endvarname = instruction.find_first_not_of(VARRIABLE_CHARACTER,pos_variablename);
+    pos_endvarname = instruction.find_first_not_of(character_allowed_for_variables,pos_variablename);
 
     if(pos_endvarname == std::string::npos)
     {
@@ -500,7 +500,6 @@ bool check_if_a_letter_is_right_before(std::string& instruction,std::string::siz
     {
         /* If the position is not pointing to the first charater of the row, then it need to be
            checked if the letter before the position is a space or a tab-sign.  */
-        char a = instruction.at(pos_tmp -1);
         if(   (instruction.at(pos_tmp -1) ==' ')
            || (instruction.at(pos_tmp -1) =='\t'))
         {

@@ -25,8 +25,8 @@
 #include "ECU_variable.h"
 #include <algorithm>
 
-#define VARRIABLE_CHARACTER_FIRST_LETTER    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
-#define VARRIABLE_CHARACTER                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"
+const char character_allowed_as_first_letter[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_";
+const char character_allowed_for_variables[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789";
 
 enum EnumSearchEle
 {
