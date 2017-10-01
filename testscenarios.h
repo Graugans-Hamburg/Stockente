@@ -25,6 +25,9 @@
 #include "ECU_variable.h"
 #include <algorithm>
 
+#define VARRIABLE_CHARACTER_FIRST_LETTER    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_"
+#define VARRIABLE_CHARACTER                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789"
+
 enum EnumSearchEle
 {
     min_value,
@@ -42,5 +45,7 @@ int check_T05_get_var_properties(std::string& instruction,ECU_variable& tmp_vari
 int check_T07_extract_comment(std::string& one_line_from_xml_file,std::string& str_comment);
 int check_T06_extract_thres(std::string& str_comment,ECU_variable& tmp_variable, EnumSearchEle element);
 int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_variable, EnumSearchEle element);
+
+bool check_if_a_letter_is_right_before(std::string& instruction,std::string::size_type pos_tmp);
 
 #endif // TESTSCENARIOS_H_INCLUDED

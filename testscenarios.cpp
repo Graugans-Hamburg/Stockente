@@ -156,60 +156,81 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
     int datatypes_found=0;
     std::string::size_type pos_tmp, pos_datatype, pos_variablename, pos_endvarname, pos_semicolon;
 
-    pos_tmp = instruction.find(" uint8_t ");
+    pos_tmp = instruction.find("uint8_t ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_u8);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_u8);
+        }
     }
 
-    pos_tmp = instruction.find(" int8_t ");
+    pos_tmp = instruction.find("int8_t ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_i8);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_i8);
+        }
     }
 
-    pos_tmp = instruction.find(" uint16_t ");
+    pos_tmp = instruction.find("uint16_t ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_u16);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_u16);
+        }
     }
 
-    pos_tmp = instruction.find(" int16_t ");
+    pos_tmp = instruction.find("int16_t ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_i16);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_i16);
+        }
     }
 
-    pos_tmp = instruction.find(" uint32_t ");
+    pos_tmp = instruction.find("uint32_t ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_u32);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_u32);
+        }
     }
 
-    pos_tmp = instruction.find(" int32_t ");
+    pos_tmp = instruction.find("int32_t ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_i32);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_i32);
+        }
     }
 
-    pos_tmp = instruction.find(" float ");
+    pos_tmp = instruction.find("float ");
     if(pos_tmp != std::string::npos)
     {
-        datatypes_found++;
-        pos_datatype = pos_tmp;
-        tmp_variable.SetDataType(type_f32);
+        if(check_if_a_letter_is_right_before(instruction,pos_tmp) == false)
+        {
+            datatypes_found++;
+            pos_datatype = pos_tmp;
+            tmp_variable.SetDataType(type_f32);
+        }
     }
 
     if(datatypes_found == 0)
@@ -227,7 +248,8 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
     //Find the location of the space character which is right befind the datatype.
 
     pos_variablename = instruction.find(" ",pos_datatype + 1);
-    pos_variablename = instruction.find_first_not_of(" ",pos_variablename);
+    pos_variablename = instruction.find_first_of(VARRIABLE_CHARACTER_FIRST_LETTER,pos_variablename);
+
     if(pos_variablename == std::string::npos)
     {
         std::cerr << "Error[-503]:Die Position des Variablennames konnte nicht in der Anweisung gefunden werden." << std::endl;
@@ -256,23 +278,7 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
         return -505;
     }
 
-    std::string::size_type pos_equal = instruction.find("=",pos_variablename);
-    std::string::size_type pos_whitespace = instruction.find(" ",pos_variablename);
-    std::string::size_type pos_tab = instruction.find('\t',pos_variablename);
-
-    if(pos_semicolon < pos_array)
-        pos_endvarname = pos_semicolon - 1;
-    else
-        pos_endvarname = pos_array - 1;
-
-    if(pos_equal <= pos_endvarname)
-        pos_endvarname = pos_equal - 1;
-
-    if(pos_whitespace <= pos_endvarname)
-        pos_endvarname = pos_whitespace - 1;
-
-    if(pos_tab <= pos_endvarname)
-        pos_endvarname = pos_tab - 1;
+    pos_endvarname = instruction.find_first_not_of(VARRIABLE_CHARACTER,pos_variablename);
 
     if(pos_endvarname == std::string::npos)
     {
@@ -280,6 +286,11 @@ int check_T04_extract_instruction(std::string& one_line_from_xml_file,std::strin
                   << std::endl;
         return -506;
     }
+    else
+    {
+        pos_endvarname = pos_endvarname -1;
+    }
+
     if(pos_endvarname < pos_variablename)
     {
         std::cerr << "Error[-507]:Something strange happens the variable name ends before it"
@@ -420,7 +431,7 @@ int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_var
             break;
         default:
             // Programming failure the wrong value had been handed over as the third element.
-            std::cerr << "Error[-803]: functioncall with wrong element. Only the enum unit_value or"
+            std::cerr << "Error[-803]: function call with wrong element. Only the enum unit_value or"
                       << "des_value makes sense" << std::endl;
             return -803;
     }
@@ -460,4 +471,42 @@ int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_var
             return -803;
     }
     return 0;
+}
+
+/*******************************************************************************************
+ *
+ * Function 09 - Check if there is a letter (or any other printable character) right before
+ *               the position that is handed over as the second argument.
+ *
+ *               The function can
+ *               be used to determine if a string is on its own or whether it is a part of
+ *               longer string. Example: If you want to find the data type
+ *               then you can search for int8_t but the same sting is also contained in
+ *               uint8_t. Both cases will match the string int8_t. This check will allow to
+ *               determine if there is any letter before the string or if it is just a
+ *               space or tab.
+ *
+ ******************************************************************************************/
+
+bool check_if_a_letter_is_right_before(std::string& instruction,std::string::size_type pos_tmp)
+{
+    if(pos_tmp == 0)
+    {
+        /* Check it the position points to the first letter of the row, if so then it there is no
+           leading letter */
+        return false;
+    }
+    if(pos_tmp >= 1)
+    {
+        /* If the position is not pointing to the first charater of the row, then it need to be
+           checked if the letter before the position is a space or a tab-sign.  */
+        char a = instruction.at(pos_tmp -1);
+        if(   (instruction.at(pos_tmp -1) ==' ')
+           || (instruction.at(pos_tmp -1) =='\t'))
+        {
+            return false;
+        }
+    }
+    /* If both checked before fail, than a printable character must be right before the position*/
+    return true;
 }
