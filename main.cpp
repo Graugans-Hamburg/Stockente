@@ -272,9 +272,10 @@ int main(int argc, char *argv[])
                     pos_name_end = pos_name_start + ECUVariableName.length() -1 ;
                     pos_start_address = one_line_from_map_file.find("0x");
                     pos_end_address = one_line_from_map_file.find(" ", pos_start_address);
-                    if(pos_start_address != std::string::npos
+                    if(   pos_start_address != std::string::npos
                        && pos_start_address < pos_name_start
-                       && check_if_a_letter_is_right_after(one_line_from_map_file,pos_name_end) == false)
+                       && check_if_a_letter_is_right_after(one_line_from_map_file,pos_name_end) == false
+                       && check_if_a_letter_is_right_before(one_line_from_map_file,pos_name_start) == false)
                     {
                         // Address found
                         std::string str_address = one_line_from_map_file.substr(pos_start_address,pos_end_address);
