@@ -481,14 +481,14 @@ int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_var
  *               The function can
  *               be used to determine if a string is on its own or whether it is a part of
  *               longer string. Example: If you want to find the data type
- *               then you can search for int8_t but the same sting is also contained in
+ *               then you can search for int8_t but the same string is also contained in
  *               uint8_t. Both cases will match the string int8_t. This check will allow to
  *               determine if there is any letter before the string or if it is just a
  *               space or tab.
  *
  ******************************************************************************************/
 
-bool check_if_a_letter_is_right_before(std::string& instruction,std::string::size_type pos_tmp)
+bool check_if_a_letter_is_right_before(std::string& line,std::string::size_type pos_tmp)
 {
     if(pos_tmp == 0)
     {
@@ -500,12 +500,51 @@ bool check_if_a_letter_is_right_before(std::string& instruction,std::string::siz
     {
         /* If the position is not pointing to the first charater of the row, then it need to be
            checked if the letter before the position is a space or a tab-sign.  */
-        if(   (instruction.at(pos_tmp -1) ==' ')
-           || (instruction.at(pos_tmp -1) =='\t'))
+        if(   (line.at(pos_tmp - 1) ==' ')
+           || (line.at(pos_tmp - 1) =='\t'))
         {
             return false;
         }
     }
     /* If both checked before fail, than a printable character must be right before the position*/
+    return true;
+}
+
+
+/*******************************************************************************************
+ *
+ * Function 10 - Check if there is a letter (or any other printable character) right after
+ *               the position that is handed over as the second argument.
+ *
+ *               The function can
+ *               be used to determine if a string is on its own or whether it is a part of
+ *               longer string. Example: If you want to find a variable name
+ *               then you can search for test_var but the same string can also be contained in
+ *               test_var2. Both cases will match the string test_var. This check will allow to
+ *               determine if there is any letter after the string or if it is just a
+ *               space or tab.
+ *
+ ******************************************************************************************/
+
+bool check_if_a_letter_is_right_after(std::string& line,std::string::size_type pos_tmp)
+{
+    if(pos_tmp + 1 == line.length())
+    {
+        /* Check it the position points to the last letter of the line, if so then it there is no
+           following letter. 1 is added to the postion as the position counter starts to count with
+           with 0. */
+        return false;
+    }
+    if(pos_tmp + 1 < line.length())
+    {
+        /* If the position is not pointing to the last charater of the row, then it need to be
+           checked if the letter after the position is a space or a tab-sign.  */
+        if(   (line.at(pos_tmp + 1) ==' ')
+           || (line.at(pos_tmp + 1) =='\t'))
+        {
+            return false;
+        }
+    }
+    /* If both checked before fail, then a printable character must be right after the position*/
     return true;
 }

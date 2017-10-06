@@ -46,6 +46,7 @@ int check_T07_extract_comment(std::string& one_line_from_xml_file,std::string& s
 int check_T06_extract_thres(std::string& str_comment,ECU_variable& tmp_variable, EnumSearchEle element);
 int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_variable, EnumSearchEle element);
 
-bool check_if_a_letter_is_right_before(std::string& instruction,std::string::size_type pos_tmp);
+bool check_if_a_letter_is_right_before(std::string& line,std::string::size_type pos_tmp);
+bool check_if_a_letter_is_right_after(std::string& line,std::string::size_type pos_tmp);
 
 #endif // TESTSCENARIOS_H_INCLUDED

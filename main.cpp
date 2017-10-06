@@ -255,22 +255,26 @@ int main(int argc, char *argv[])
             while(std::getline(map_file, one_line_from_map_file))
             {
 
-                std::string::size_type pos_name;
+                std::string::size_type pos_name_start;
+                std::string::size_type pos_name_end;
                 std::string::size_type pos_start_address;
                 std::string::size_type pos_end_address;
-                pos_name = one_line_from_map_file.find(tmp_ECU_variable->GetName());
-                if (pos_name == std::string::npos)
+                std::string ECUVariableName = tmp_ECU_variable->GetName();
+                pos_name_start = one_line_from_map_file.find(tmp_ECU_variable->GetName());
+
+                if (pos_name_start == std::string::npos)
                 {
                     //std::cout << "not found\n";
                 }
                 else
                 {
                     // CCP Tag found start to analyse the file.
+                    pos_name_end = pos_name_start + ECUVariableName.length() -1 ;
                     pos_start_address = one_line_from_map_file.find("0x");
                     pos_end_address = one_line_from_map_file.find(" ", pos_start_address);
-
                     if(pos_start_address != std::string::npos
-                       && pos_start_address < pos_name)
+                       && pos_start_address < pos_name_start
+                       && check_if_a_letter_is_right_after(one_line_from_map_file,pos_name_end) == false)
                     {
                         // Address found
                         std::string str_address = one_line_from_map_file.substr(pos_start_address,pos_end_address);
