@@ -309,14 +309,31 @@ int main(int argc, char *argv[])
     XMLDocument xmlDoc;
     XMLNode * pRoot = xmlDoc.NewElement("measurement_file");
     xmlDoc.InsertFirstChild(pRoot);
-
+    /* Save the ECU build Information */
+    XMLElement * p_build_information = xmlDoc.NewElement("build_information");
+        pRoot->InsertEndChild(p_build_information);
+    XMLElement * p_created_by = xmlDoc.NewElement("created_by");
+        p_build_information->InsertEndChild(p_created_by);
+        p_created_by->SetText("Stockente - Unreleased Version had been used.");
+    /* Define the ECU Properties */
+    XMLElement * p_ecu_properties = xmlDoc.NewElement("ecu_properties");
+        pRoot->InsertEndChild(p_ecu_properties);
+    XMLElement * p_endianness = xmlDoc.NewElement("endianness");
+        p_ecu_properties->InsertEndChild(p_endianness);
+        p_endianness->SetText("little");
+    XMLElement * p_station_address = xmlDoc.NewElement("station_address");
+        p_ecu_properties->InsertEndChild(p_station_address);
+        p_station_address->SetText("0");
+    /* Define the ECU variable list */
+    XMLElement * p_varible_list = xmlDoc.NewElement("variable_list");
+        pRoot->InsertEndChild(p_varible_list);
     for(unsigned int idx_i = 0; idx_i < CCP_Variables.size(); idx_i++)
     {
         ECU_variable* tmp_ECU_variable;
         tmp_ECU_variable = &CCP_Variables.at(idx_i);
 
         XMLElement * pVariable = xmlDoc.NewElement("variable");
-        pRoot->InsertEndChild(pVariable);
+        p_varible_list->InsertEndChild(pVariable);
         XMLElement * pName = xmlDoc.NewElement("name");
             pVariable->InsertEndChild(pName);
             std::string tmp_str = tmp_ECU_variable->GetName();
