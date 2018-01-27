@@ -16,8 +16,8 @@
  *      Author: Matthias Baumann
  */
 
-#ifndef TESTSCENARIOS_H_INCLUDED
-#define TESTSCENARIOS_H_INCLUDED
+#ifndef SCAN_SOURCE_FILES_H_INCLUDED
+#define SCAN_SOURCE_FILES_H_INCLUDED
 
 #include <iostream>
 #include <fstream>
@@ -49,4 +49,4 @@ int check_T08_extract_str_element(std::string& str_comment,ECU_variable& tmp_var
 bool check_if_a_letter_is_right_before(std::string& line,std::string::size_type pos_tmp);
 bool check_if_a_letter_is_right_after(std::string& line,std::string::size_type pos_tmp);
 
-#endif // TESTSCENARIOS_H_INCLUDED
+#endif // SCAN_SOURCE_FILES_H_INCLUDED

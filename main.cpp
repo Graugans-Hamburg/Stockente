@@ -20,7 +20,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "testscenarios.h"
+#include "scan_source_files.h"
 #include "ECU_variable.h"
 #include "tinyxml2.h"
 

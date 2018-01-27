@@ -16,7 +16,7 @@
  *      Author: Matthias Baumann
  */
 
-#include "testscenarios.h"
+#include "scan_source_files.h"
 
 /*******************************************************************************************
  *
