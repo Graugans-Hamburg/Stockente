@@ -1,0 +1,16 @@
+# Erstmal alles ignorieren
+
+*.cbp
+*.depend
+*.layout
+*.o
+*.csv
+*.ods
+
+.gitignore~
+
+/logs
+/bin
+/doc
+
+/obj

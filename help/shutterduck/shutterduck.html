@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<link rel="stylesheet" type="text/css" href="../layout/graugans.css" />
+</head>
+
+<body>
+	<h1>Abstract</h1>
+	
+	<p>
+	Das Programm hat die Aufgabe den Quelltext eines Mikrocontrollerprogramms nach Variablen zu durchsuchen um sie später über CCP messen zu können. Hierfür durchsucht es alle Dateien (z.B. *.c *.cpp *.h ) nach Variablen welche mit einem entsprechenden Tag deklariert wurden. Die gefundenen Variablen werden in eine XML Datei geschrieben. Diese XML Datei besitzt eine Struktur die so aufgebaut ist, dass sie direkt von dem Programm Labskaus gelesen werden kann. Die Quelltextdateien werden nach dem Schlüsselwort $CCP durchsucht. Eine Variable kann auf die folgende Art und Weise markiert werden:
+	</p>
+	<p>
+	Das Schlüsselwort steht in einem Kommentar in der selben Zeile der Variablendefinition. Ein Beispiel hierfür wäre: 
+	</p>
+	<p class=CCode>
+	volatile uint8_t u8_Gain_CH1; /*$CCP min:0 max:600 unit:“mV“ des:“Spannung am Pin B4“*/ 
+	</p>
+	
+	<p>
+	Wichtig ist bei diesen Kommentaren die Reihenfolge. Die Schlüsselwörter min: und max: müssen wenn sie verwendet werden immer vor der Beschreibung (des:) und der Einheit (unit:) stehen. Sollte diese missachtet werden, so kann es passieren dass ein Teil des Kommentar für den minimalen oder maximalen Wert verwendet wird. Weiterhin ist wichtig das als Trennung zur Nachkommastelle ein Punkt und nicht ein Komma verwendet wird. Zusätzlich sollte beachtet werden das die Beschreibung und die Einheit in Hochkomma eingeschlossen werden müssen.  
+	</p>
+	
+	<h1> Beschreibung des Algorithmus </h1>
+	<p>
+	In einen ersten Schritt muss nach der Zeichenfolge (ZF) $CPP gesucht werden. Wird eine solche ZF gefunden, so wird davon ausgegangen dass sich diese innerhalb eines Kommentars befinden und das die ZF benutzt wurde um eine CCP-Variable zu markieren. Im nächsten Schritt sollte die gesamte ZF identifiziert werden welche sowohl den  Kommentar als auch die Definition der Variable enthält. 
+	</p>
+	
+	<h2> Eine Variable hat einen Kommentar in der gleiche Zeile aber nach der Variablendefinition </h2>
+	<ol>
+	    <li> Dieser Fall kann gesucht werden indem erst kontrolliert wird ob es in der Zeile einen vollständigen Kommentar gibt und ob es nur einen Kommentar gibt. Ein vollständiger Kommentar sollte in einer Zeile sowohl die Markierung für dessen Anfang und Ende haben (Anfang: /* Ende: */).</li>
+	    <li>Weiterhin sollte kontrolliert werden ob sich hinter dem Kommentar noch weitere druckbare Zeichen befinden.</li>
+	    <li>Zusätzlich muss kontrolliert werden, ob sich vor dem /* ein Semikolon befindet und das sich nur ein Semikolon in der Zeile befindet. Hiermit wäre bewiesen das in der entsprechenden Zeile eine einzelne Anweisung steht.</li>
+	    <li>Ab hier sollte eine Auswertung des Argumentes und des Kommentars vorgenommen werden. Beide ZF werden extrahiert und einzeln untersucht.</li>
+	</ol>
+	
+	<h2>Es folgt eine Untersuchung des Kommentars</h2>
+	<ol>
+	    <li>Es wird nach der ZF min: oder max: gesucht jenachdem was man gerade finde möchte. Weiterhin wird überprüft ob auch die ZF des gefunden werden konnte. Die Zeichenposition des ersten Buchstabes von min: oder max: wird sich gemerkt und als Startposition für die weitere Suche verwendet.</li>
+	    <li> In einem zweiten Schritt wird von der Startposition aus nach der ersten Nummer oder Vorzeichen gesucht welches sich nach dem Buchstaben. Somit ist die Position bekannt wo der Wert für min oder max beginnt.</li>
+	    <li> Hiernach wird die nächste Position gesucht die weder einer Nummer oder dem Punkt entspricht. Diese Position bezeichnet den Endpunkt. Die ZF hierzwischen wird sublimiert und in eine Zahl umgewandelt. Das umwandeln in eine Zahl hat den Vorteil das mögliche Fehler wie .. direkt erkannt werden.</li>
+	    <li> Der gefundene Wert wird in die Kartei eingetragen vorausgesetzt er konnte in eine Zahl umgewandelt werden.</li>
+	    <li> Es wird zusätzlich nach der ZF unit: oder des: gesucht, malwieder, je nach dem was man gerade finden möchte. Die Zeichenposition des ersten Buchstabes von unit oder des: wird sich gemerkt und als Startposition für die weitere Suche verwendet.</li>
+	    <li> Der eigentlich gesucht Kontext befindet sich einklemmt zwischen zwei Hochkomma weshalb erst die Position des ersten und anschließend die Position des zweiten gesucht wird. Der Text hier zwischen wird durch die ermittelten Positionen sublimiert und in die Kartei geschrieben. </li>
+        </ol>
+		
+	<h2>Untersuchen der Zeichenfolge des Argumentes</h2>
+	<ol>
+	    <li>Die Zeichenfolge der Anweisung  sollte nun untersucht werden um die Eigenschaften der CCP Variable zu finden. Die Zeichenfolge beinhaltet kein Kommentar und endet mich einem Semikolon. Dieses Semikolon wird auch bei der Analyse vom Programm gesucht. Wird es nicht gefunden oder werden zu viel gefunden wird die weitere Analyse abgebrochen.</li>
+	    <li>Als nächstes sollte der Datentyp der Variable gefunden werden. Hierfür wird in der Anweisung nach den folgenden Schlüsselwörtern gesucht (uint8_t, int8_t, uint16_t, float,  …). Sollte kein Datentyp gefunden werden oder jemand auf die Schnapsidee kommen zwei Datentypen in der Anweisung zu verstecken so wird aus Protest abgebrochen. Konnte der Datentyp erfolgreich identifiziert werden so wird dieser in die Kartei geschrieben.</li>
+	    <li>Der Name der Variable befindet sich direkt nach dem Datentypen. Wenn man den Text nach dem Datentypen und dem Ende der Anweisung kontrolliert kann es sein das man hierbei auf eine  gleichzeitige Initialisierung stößt ( = Wert ;) oder das sich hierbei herausstellt das ein Feld (Array) definiert wurde. Um nur den Namen herauszufinden muss der Text nach dem Schlüsselwort bis zum nächsten '=', '[', ';' untersucht werden. Wird ein Array gefunden, also in der Anweisung eine '[' gefunden, so wird im Augenblick die Analyse abgebrochen (es würde zwar gehen aber mir ist noch nichts schlaues dazu eingefallen und selbst wenn müsste ich das dann auch noch programmieren und außerdem irgendwann ist auch mal Ende). Der gefundene Name wird in die Kartei geschrieben. </li>
+        </ol>
+
+<!-- AUTOGENERATED FOOTER POSITION -->
+<!-- AUTOGENERATED FOOTER START --> 
+<hr><hr>
+<div id="FooterLogo">
+	<img src="../layout/GraugansLogo.png">
+</div>
+<div id="FooterText">
+  <br>
+  Program:  Stockente<br>
+  Version:  v1.4<br><br>
+  Graugans, created 2018 by Matthias Baumann
+</div>
+<!-- AUTOGENERATED FOOTER STOP -->
+</body>
+</html>
