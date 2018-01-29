@@ -320,6 +320,8 @@ void ECUXMLCreator::PlotResults2Terminal(void)
     std::cout << std::endl << std::endl;
     std::cout << "------------Results------------------------------------" << std::endl;
     std::cout << "Number of CCP Variables: " << CCP_Variables.size() << std::endl;
+    std::cout << "CCP_Station Address    : " << station_address << std::endl;
+    std::cout << "ECU Endianness         : " << endianness << std::endl;
     if(eResult == 0)
     {
         std::cout << "The VarFile creation was successful" << std::endl;
