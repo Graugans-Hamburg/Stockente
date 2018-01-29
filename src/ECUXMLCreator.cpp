@@ -4,6 +4,7 @@ ECUXMLCreator::ECUXMLCreator()
 {
     //Default values
     station_address = 0;
+    endianness = "little";
 }
 
 ECUXMLCreator::~ECUXMLCreator()
@@ -236,7 +237,7 @@ using namespace tinyxml2;
         pRoot->InsertEndChild(p_ecu_properties);
     XMLElement * p_endianness = xmlDoc.NewElement("endianness");
         p_ecu_properties->InsertEndChild(p_endianness);
-        p_endianness->SetText("little");
+        p_endianness->SetText(endianness.c_str());
     XMLElement * p_station_address = xmlDoc.NewElement("station_address");
         p_ecu_properties->InsertEndChild(p_station_address);
         std::stringstream ss_StationAddress;
@@ -331,5 +332,24 @@ void ECUXMLCreator::PlotResults2Terminal(void)
                   << " The file that should have been created is: " << result_file_name<< std::endl;
     }
     std::cout << "------------END----------------------------------------" << std::endl;
+}
+
+/*******************************************************************************************
+* Function: Define the endianness
+******************************************************************************************/
+void ECUXMLCreator::Set_endianness(std::string str_endianness)
+{
+    if(str_endianness.compare("big") == 0)
+    {
+        endianness = "big";
+        return;
+    }
+    if(str_endianness.compare("little") == 0)
+    {
+        endianness = "little";
+        return;
+    }
+    std::cerr << "Error[-123]: Endianness flag found but the follwoing argument is not valid."
+              << "Endianness will be set to little instead" << std::endl;
 }
 

@@ -30,6 +30,7 @@ int main(int argc, char *argv[])
     std::vector<ECU_variable> CCP_Variables;
     std::string result_file_name;
     std::string map_file_name;
+    std::string endianess;
 
     ECUXMLCreator xml_creator;
 
@@ -91,13 +92,17 @@ int main(int argc, char *argv[])
             std::string str_target = "-t";
             std::string str_mapfile = "-x";
             std::string str_source = "-s";
+            std::string str_endianess = "-e";
             if (arg.compare(str_target) == 0)       {argtype = 1;}
             if (arg.compare(str_mapfile) == 0)      {argtype = 2;}
             if (arg.compare(str_source) == 0)       {argtype = 3;}
+            if (arg.compare(str_endianess) == 0)    {argtype = 4;}
             // Try to open the CPP file handed over with the first argument
             if(     arg.compare(str_target) != 0
                 &&  arg.compare(str_mapfile) != 0
-                &&  arg.compare(str_source) != 0)
+                &&  arg.compare(str_source) != 0
+                &&  arg.compare(str_endianess) != 0)
+
             {
                 switch (argtype)
                 {
@@ -105,7 +110,6 @@ int main(int argc, char *argv[])
                         std::cerr << "A unexpected argument had been entered in the function call" << std::endl;
                         return 6;
                     case 1:
-                        result_file_name = arg;
                         xml_creator.Set_result_file_name(arg);
                         cnt_target++;
                         if(cnt_target > 1)
@@ -114,7 +118,6 @@ int main(int argc, char *argv[])
                         }
                         break;
                     case 2:
-                        map_file_name = arg;
                         xml_creator.Set_map_file_name(arg);
                         cnt_map++;
                         if(cnt_map > 1)
@@ -147,6 +150,12 @@ int main(int argc, char *argv[])
                             {
                                 std::cerr << "Source file could not be opened: " << arg << std::endl;
                             }
+                        }
+                        break;
+                    case 4:
+                        {
+                            xml_creator.Set_endianness(arg);
+                            break;
                         }
                         break;
                     default:

@@ -12,15 +12,19 @@
 	</p>
 	
 	<p class=terminal>
-	Stockente [vollständiger Pfad zur Quelltextdatei] [Name der zu speichernden Ergebnisdatei]
+	Stockente -v
 	</p>
 	
 	<p class=terminal>
-	Stockente -t [Name der zu speichernden Ergebnisdatei] -x [Mapdatei] -s [vollständiger Pfad zur Quelltextdatei(en)]
+	Stockente [vollständiger Pfad zur Quelltextdatei] [Name der zu speichernden Ergebnisdatei]
+	</p>
+	
+	<p class=terminal> 
+	Stockente -t [Name der zu speichernden Ergebnisdatei] -x [Mapdatei] -s [vollständiger Pfad zur Quelltextdatei(en)] -e [little | big]
 	</p>
 	
 	<p>
-	Hinweis: Hierbei können alle Arugmente durcheinander gewürfet werden wenn dabei die Regel berücksichtigt wird das jedes Argument mit der entsprechenden Option eingeleitet wírd. Somit sollte immer vor dem der Angabe der Zieldatei das Argument -t, vor der Angabe der Mapdatei ein -x und vor der zu untersuchenden Quelltextdateien ein -s stehen. Wird keine Mapdatei mit angegeben beim Argumentenaufruf, so werden alle Adressen in der Kartei mit 0x0 beschrieben.
+	Hinweis: Hierbei können alle Arugmente durcheinander gewürfet werden wenn dabei die Regel berücksichtigt wird das jedes Argument mit der entsprechenden Option eingeleitet wírd. Somit sollte immer vor dem der Angabe der Zieldatei das Argument -t, vor der Angabe der Mapdatei ein -x und vor der zu untersuchenden Quelltextdateien ein -s stehen. Wird keine Mapdatei mit angegeben beim Argumentenaufruf, so werden alle Adressen in der Kartei mit 0x0 beschrieben. Mit dem Argument -e kann die Endianness des Controllers angegeben werden. Auf ein -e darf entweder ein little oder big folgen. Wird ein anderes Wort nach dem -e übergeben so wird einfach als Endianness little aktiviert.
 	</p>
 
 	

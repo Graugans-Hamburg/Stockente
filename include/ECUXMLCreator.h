@@ -15,6 +15,7 @@ class ECUXMLCreator
         virtual ~ECUXMLCreator();
         void Set_result_file_name(std::string tmp){result_file_name = tmp;};
         void Set_map_file_name(std::string tmp){map_file_name = tmp;};
+        void Set_endianness(std::string str_endianess);
         void Add_source_code(std::string source_file_name_full_path);
         int ScanSourceCodeFiles(void);
         int ScanAddressMapFiles(void);
@@ -27,6 +28,7 @@ class ECUXMLCreator
         std::vector<ECU_variable> CCP_Variables;
         std::string result_file_name;
         std::string map_file_name;
+        std::string endianness;
         int station_address;
         tinyxml2::XMLError eResult;
 };
