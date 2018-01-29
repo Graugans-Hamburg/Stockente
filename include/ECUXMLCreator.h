@@ -18,6 +18,7 @@ class ECUXMLCreator
         void Add_source_code(std::string source_file_name_full_path);
         int ScanSourceCodeFiles(void);
         int ScanAddressMapFiles(void);
+        int ScanForStationAddress(std::string& one_line_from_xml_file);
         void CreateXMLFile(void);
         void PlotResults2Terminal(void);
     protected:
@@ -26,6 +27,7 @@ class ECUXMLCreator
         std::vector<ECU_variable> CCP_Variables;
         std::string result_file_name;
         std::string map_file_name;
+        int station_address;
         tinyxml2::XMLError eResult;
 };
 

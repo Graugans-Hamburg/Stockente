@@ -548,3 +548,4 @@ bool check_if_a_letter_is_right_after(std::string& line,std::string::size_type p
     /* If both checked before fail, then a printable character must be right after the position*/
     return true;
 }
+

@@ -2,7 +2,8 @@
 
 ECUXMLCreator::ECUXMLCreator()
 {
-    //ctor
+    //Default values
+    station_address = 0;
 }
 
 ECUXMLCreator::~ECUXMLCreator()
@@ -38,8 +39,8 @@ for(unsigned int idx_j = 0; idx_j < files_to_scan.size(); idx_j++)
         int source_code_line = 0;
         while(std::getline(src_code_file, one_line_from_xml_file))
         {
+            ScanForStationAddress(one_line_from_xml_file);
             source_code_line++;
-
             std::string::size_type n;
             n = one_line_from_xml_file.find("$CCP");
             if (n == std::string::npos) {
@@ -82,6 +83,7 @@ for(unsigned int idx_j = 0; idx_j < files_to_scan.size(); idx_j++)
                 CCP_Variables.push_back(*tmp_variable);
             }
 
+
         }
 
         if(src_code_file.is_open())
@@ -93,6 +95,52 @@ for(unsigned int idx_j = 0; idx_j < files_to_scan.size(); idx_j++)
     return 0;
 }
 
+/*******************************************************************************************
+* Function: Scan if the station address is available
+******************************************************************************************/
+int ECUXMLCreator::ScanForStationAddress(std::string& one_line_from_xml_file)
+{
+
+    std::string::size_type n;
+    n = one_line_from_xml_file.find("$StationAddressCCP");
+    if (n == std::string::npos) {
+        //std::cout << "not found\n";
+        return 0;
+    } else
+    {
+        std::string::size_type pos_station_address_tag = one_line_from_xml_file.find("CCP_STATION_ADDRESS");
+        std::string::size_type pos_start_value = one_line_from_xml_file.find_first_of("1234567890.",pos_station_address_tag);
+        std::string::size_type pos_end_value = one_line_from_xml_file.find_first_not_of("1234567890.",pos_start_value);
+
+        if( pos_start_value == std::string::npos || pos_end_value == std::string::npos)
+        {
+            std::cerr << "Error[-1102]:The start or the end of the string, describing the station address, could"
+                      << "not be found." << std::endl;
+            return -1102;
+        }
+
+        std::string str_value = one_line_from_xml_file.substr(pos_start_value,pos_end_value - pos_start_value);
+
+        try
+        {
+            std::stoll(str_value);
+        }
+        catch(...)
+        {
+            std::cerr << "Error[-1104]:The string which should be the station address value could not be "
+                      << "converted into a number." << std::endl;
+            return -1104;
+        }
+        if(std::stoll(str_value) < 0 || std::stoll(str_value) > 65535)
+        {
+            std::cerr << "Error[-1105]:The station address is to big and will be changed to 0 "
+                      << std::endl;
+            return -1105;
+        }
+        station_address =std::stoll(str_value);
+    }
+    return 0;
+}
 /*******************************************************************************************
 * Function: Scan the MAP file and try to find all the addresses
 ******************************************************************************************/
@@ -191,7 +239,10 @@ using namespace tinyxml2;
         p_endianness->SetText("little");
     XMLElement * p_station_address = xmlDoc.NewElement("station_address");
         p_ecu_properties->InsertEndChild(p_station_address);
-        p_station_address->SetText("0");
+        std::stringstream ss_StationAddress;
+        ss_StationAddress << station_address;
+        std::string str_StationAddress = ss_StationAddress.str();
+        p_station_address->SetText(str_StationAddress.c_str());
     /* Define the ECU variable list */
     XMLElement * p_varible_list = xmlDoc.NewElement("variable_list");
         pRoot->InsertEndChild(p_varible_list);

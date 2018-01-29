@@ -7,8 +7,7 @@
 
 .gitignore~
 
-/logs
+/Ticket_23
 /bin
 /doc
-
 /obj

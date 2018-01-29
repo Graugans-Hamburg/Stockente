@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Bug10/test.xml -s /home/mattes/Projekte/50_Stockente/Bug10/power_supply.c -x /home/mattes/Projekte/50_Stockente/Bug10/Lama_IDE_Test5.map" />
+				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Ticket_23/test.xml -s /home/mattes/Projekte/50_Stockente/Ticket_23/power_supply.c -s /home/mattes/Projekte/50_Stockente/Ticket_23/CCP_driver.h -x /home/mattes/Projekte/50_Stockente/Ticket_23/Lama_IDE_Test5.map" />
 				<Compiler>
 					<Add option="-std=c++11" />
 					<Add option="-g" />
@@ -23,7 +23,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Bug10/test.xml -s /home/mattes/Projekte/50_Stockente/Bug10/power_supply.c -x /home/mattes/Projekte/50_Stockente/Bug10/Lama_IDE_Test5.map" />
+				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Ticket_23/test.xml -s /home/mattes/Projekte/50_Stockente/Ticket_23/power_supply.c -s /home/mattes/Projekte/50_Stockente/Ticket_23/CCP_driver.h -x /home/mattes/Projekte/50_Stockente/Ticket_23/Lama_IDE_Test5.map" />
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="include" />
