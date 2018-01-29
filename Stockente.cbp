@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Stockente" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Stockente" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Bug10/test.xml -s /home/mattes/Projekte/50_Stockente/Bug10/power_supply.c -x /home/mattes/Projekte/50_Stockente/Bug10/Lama_IDE_Test5.map" />
+				<Compiler>
+					<Add option="-std=c++11" />
+					<Add option="-g" />
+					<Add directory="include" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Stockente" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Bug10/test.xml -s /home/mattes/Projekte/50_Stockente/Bug10/power_supply.c -x /home/mattes/Projekte/50_Stockente/Bug10/Lama_IDE_Test5.map" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="Release_Windows">
+				<Option output="bin/Release_Windows/Stockente.exe" prefix_auto="1" extension_auto="0" />
+				<Option object_output="obj/Release_Windows/" />
+				<Option type="1" />
+				<Option compiler="mingw-w64" />
+				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Bug10/test.xml -s /home/mattes/Projekte/50_Stockente/Bug10/power_supply.c -x /home/mattes/Projekte/50_Stockente/Bug10/Lama_IDE_Test5.map" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-mconsole" />
+					<Add directory="include" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add option="-fexceptions" />
+		</Compiler>
+		<Linker>
+			<Add option="-static -lpthread" />
+		</Linker>
+		<Unit filename="ECU_variable.cpp" />
+		<Unit filename="ECU_variable.h" />
+		<Unit filename="include/ECUXMLCreator.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="scan_source_files.cpp" />
+		<Unit filename="scan_source_files.h" />
+		<Unit filename="src/ECUXMLCreator.cpp" />
+		<Unit filename="tinyxml2.cpp" />
+		<Unit filename="tinyxml2.h" />
+		<Unit filename="type_definition.h" />
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

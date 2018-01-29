@@ -1,8 +1,6 @@
 # Erstmal alles ignorieren
 
-*.cbp
-*.depend
-*.layout
+
 *.o
 *.csv
 *.ods

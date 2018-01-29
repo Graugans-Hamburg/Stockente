@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
 
         if (arg.compare(str_target) == 0)
         {
-            git_version  = "Version  only known for a release";
-            git_checksum = "Checksum only known for a release";
+            git_version  = "v1.4";
+            git_checksum = "b2ee096fbc0b98a58bc24f0b86a7fc8d7f2b4a93";
         }
         // Die falsche Anzahl von Argumenten wurde der Funktion mit übergeben.
         std::cout << "------------Program: Stockente-------------------------" << std::endl

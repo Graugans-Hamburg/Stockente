@@ -1,0 +1,128 @@
+# depslib dependency file v1.0
+1504955651 source:/home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/main.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"testscenarios.h"
+	"ECU_variable.h"
+	"tinyxml2.h"
+
+1500805292 /home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/testscenarios.h
+	<iostream>
+	<fstream>
+	<sstream>
+	"ECU_variable.h"
+	<algorithm>
+
+1504955543 source:/home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/testscenarios.cpp
+	"testscenarios.h"
+
+1504955545 source:/home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/ECU_variable.cpp
+	"ECU_variable.h"
+	<cstring>
+
+1500805789 /home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/ECU_variable.h
+	<string>
+	"type_definition.h"
+	<stdint.h>
+
+1492258618 /home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/type_definition.h
+
+1488833375 source:/home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/tinyxml2.cpp
+	"tinyxml2.h"
+	<new>
+	<stddef.h>
+	<stdarg.h>
+	<cstddef>
+	<cstdarg>
+
+1488833375 /home/mattes/Projekte/40_ADC_Measurements_XCP/code_blocks/Stockente/tinyxml2.h
+	<ctype.h>
+	<limits.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stddef.h>
+	<cctype>
+	<climits>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<stdint.h>
+	<android/log.h>
+	<assert.h>
+
+1488833375 source:/home/mattes/Projekte/50_Stockente/tinyxml2.cpp
+	"tinyxml2.h"
+	<new>
+	<stddef.h>
+	<stdarg.h>
+	<cstddef>
+	<cstdarg>
+
+1488833375 /home/mattes/Projekte/50_Stockente/tinyxml2.h
+	<ctype.h>
+	<limits.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stddef.h>
+	<cctype>
+	<climits>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<stdint.h>
+	<android/log.h>
+	<assert.h>
+
+1505159127 source:/home/mattes/Projekte/50_Stockente/ECU_variable.cpp
+	"ECU_variable.h"
+	<cstring>
+
+1505159255 /home/mattes/Projekte/50_Stockente/ECU_variable.h
+	<string>
+	"type_definition.h"
+	<stdint.h>
+
+1505159255 /home/mattes/Projekte/50_Stockente/type_definition.h
+
+1517177588 source:/home/mattes/Projekte/50_Stockente/main.cpp
+	<iostream>
+	<fstream>
+	<sstream>
+	"ECU_variable.h"
+	"scan_source_files.h"
+	"tinyxml2.h"
+	"ECUXMLCreator.h"
+
+1507385687 /home/mattes/Projekte/50_Stockente/testscenarios.h
+	<iostream>
+	<fstream>
+	<sstream>
+	"ECU_variable.h"
+	<algorithm>
+
+1507385687 source:/home/mattes/Projekte/50_Stockente/testscenarios.cpp
+	"testscenarios.h"
+
+1517174598 /home/mattes/Projekte/50_Stockente/scan_source_files.h
+	<iostream>
+	<fstream>
+	<sstream>
+	"ECU_variable.h"
+	<algorithm>
+
+1517174598 source:/home/mattes/Projekte/50_Stockente/scan_source_files.cpp
+	"scan_source_files.h"
+
+1517174598 source:/home/mattes/Projekte/50_Stockente/src/ECUXMLCreator.cpp
+	"ECUXMLCreator.h"
+
+1517174598 /home/mattes/Projekte/50_Stockente/include/ECUXMLCreator.h
+	<iostream>
+	<vector>
+	"../ECU_variable.h"
+	"../scan_source_files.h"
+	"../tinyxml2.h"
+
