@@ -9,20 +9,29 @@
 	<h1>Kurzbeschreibung</h1>
 	
 	<p>
-	Das Programm hat die Aufgabe den Quelltext eines Mikrocontrollerprogramms nach Variablen zu durchsuchen um sie später über CCP messen zu können. Hierfür durchsucht es alle Dateien (z.B. *.c *.cpp *.h ) nach Variablen welche mit einem entsprechenden Tag deklariert wurden. Die gefundenen Variablen werden in eine XML-Datei geschrieben. Diese XML-Datei besitzt eine Struktur die so aufgebaut ist dass sie direkt von dem Programm Labskaus gelesen werden kann. Die Quelltextdateien werden nach dem Schlüsselwort $CCP durchsucht. Eine Variable kann auf die folgende Art und Weise markiert werden:
+	Das Programm hat die Aufgabe den Quelltext eines Mikrocontrollerprogramms nach Variablen zu durchsuchen um sie später über CCP messen zu können. Hierfür durchsucht es alle Dateien (z.B. *.c *.cpp *.h ) nach Variablen welche mit einem entsprechenden Tag deklariert wurden. Die gefundenen Variablen werden in eine XML-Datei geschrieben. Diese XML-Datei besitzt eine Struktur die so aufgebaut ist dass sie direkt von dem Programm Labskaus gelesen werden kann. Die Quelltextdateien werden nach dem Schlüsselwort $CCP$ durchsucht. Eine Variable kann auf die folgende Art und Weise markiert werden:
 	</p>
 	<p>
 	Das Schlüsselwort steht in einem Kommentar in der selben Zeile der Variablendefinition. Ein Beispiel hierfür wäre: 
 	</p>
 	<p class=CCode>
-	volatile uint8_t u8_Gain_CH1; /*$CCP min:0 max:600 unit:"mV" des:"Spannung am Pin B4"*/ 
+	volatile uint8_t u8_Gain_CH1; /*$CCP$ min:0 max:600 unit:"mV" des:"Spannung am Pin B4"*/ 
 	</p>
 	
 	<p>
 	Wichtig ist bei diesen Kommentaren die Reihenfolge. Die Schlüsselwörter min: und max: müssen, wenn sie verwendet werden, immer vor der Beschreibung (des:) und der Einheit (unit:) stehen. Sollte diese missachtet werden, so kann es passieren dass ein Teil des Kommentar für den minimalen oder maximalen Wert verwendet wird. Weiterhin ist es wichtig dass als Trennung zur Nachkommastelle ein Punkt und nicht ein Komma verwendet wird. Zusätzlich sollte beachtet werden, dass die Beschreibung und die Einheit in Hochkomma eingeschlossen werden müssen.  
+	</p><p>
+
+	<p>
+	Das Programm durchsucht die übergebenen Quelltexte zusätzlich nach einem weiteren Schlüsselwort ($CCP_StationAddress$). Dieses Schlüsselwort ist einem Quelltext der Datei CPP_driver.h definiert und bestimmt welche Station Addresse in die ECU einkompiliert wurde. Wird es nicht gefunden, so wird einfach die Adresse 0 angenommen, wodurch auch Quelltexte untersucht werden können die diese Datei nicht haben. Die Zeile zum bestimmen der Stationsadresse sieht wie folgt aus.   
+	</p>
+	<p class=CCode>
+	#define CCP_STATION_ADDRESS          0      /* $CCP_StationAddress$ */ 
 	</p>
 	
-	<h1> Beschreibung des Algorithmus </h1>
+	
+	
+	<h1> Details des Suchalgorithmus </h1>
 	<p>
 	In einen ersten Schritt muss nach der Zeichenfolge (ZF) $CPP gesucht werden. Wird eine solche ZF gefunden, so wird davon ausgegangen dass sich diese innerhalb eines Kommentars befinden und dass die ZF benutzt wurde um eine CCP-Variable zu markieren. Im nächsten Schritt sollte die gesamte ZF identifiziert werden welche sowohl den Kommentar als auch die Definition der Variable enthält. 
 	</p>

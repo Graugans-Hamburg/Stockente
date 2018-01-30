@@ -43,7 +43,7 @@ for(unsigned int idx_j = 0; idx_j < files_to_scan.size(); idx_j++)
             ScanForStationAddress(one_line_from_xml_file);
             source_code_line++;
             std::string::size_type n;
-            n = one_line_from_xml_file.find("$CCP");
+            n = one_line_from_xml_file.find("$CCP$");
             if (n == std::string::npos) {
                 //std::cout << "not found\n";
             } else
@@ -103,7 +103,7 @@ int ECUXMLCreator::ScanForStationAddress(std::string& one_line_from_xml_file)
 {
 
     std::string::size_type n;
-    n = one_line_from_xml_file.find("$StationAddressCCP");
+    n = one_line_from_xml_file.find("$CCP_StationAddress$");
     if (n == std::string::npos) {
         //std::cout << "not found\n";
         return 0;
