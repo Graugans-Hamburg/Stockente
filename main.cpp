@@ -46,21 +46,18 @@ int main(int argc, char *argv[])
     {
         std::string arg = argv[1];
         std::string str_target = "-v";
-        std::string git_version;
-        std::string git_checksum;
+
 
 
         if (arg.compare(str_target) == 0)
         {
-            git_version  = "v1.4";
-            git_checksum = "b2ee096fbc0b98a58bc24f0b86a7fc8d7f2b4a93";
-        }
         // Die falsche Anzahl von Argumenten wurde der Funktion mit übergeben.
         std::cout << "------------Program: Stockente-------------------------" << std::endl
-                  << "Version      : " << git_version << std::endl
-                  << "Git-Checksum : " << git_checksum <<std::endl
+                  << "Version      : " << xml_creator.git_version << std::endl
+                  << "Git-Checksum : " << xml_creator.git_checksum <<std::endl
                   << "-------------------------------------------------------" << std::endl;
         return 0;
+        }
     }
 
     if(argc == 3)

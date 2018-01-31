@@ -5,6 +5,8 @@ ECUXMLCreator::ECUXMLCreator()
     //Default values
     station_address = 0;
     endianness = "little";
+    git_version  = "v1.4";
+    git_checksum = "b2ee096fbc0b98a58bc24f0b86a7fc8d7f2b4a93";
 }
 
 ECUXMLCreator::~ECUXMLCreator()
@@ -231,7 +233,11 @@ using namespace tinyxml2;
         pRoot->InsertEndChild(p_build_information);
     XMLElement * p_created_by = xmlDoc.NewElement("created_by");
         p_build_information->InsertEndChild(p_created_by);
-        p_created_by->SetText("Stockente - Unreleased Version had been used.");
+        std::string tmp ="Stockente - ";
+        tmp.append(git_version);
+        tmp.append(" - Git-checksum:");
+        tmp.append(git_checksum);
+        p_created_by->SetText(tmp.c_str());
     /* Define the ECU Properties */
     XMLElement * p_ecu_properties = xmlDoc.NewElement("ecu_properties");
         pRoot->InsertEndChild(p_ecu_properties);

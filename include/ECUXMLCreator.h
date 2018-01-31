@@ -22,6 +22,8 @@ class ECUXMLCreator
         int ScanForStationAddress(std::string& one_line_from_xml_file);
         void CreateXMLFile(void);
         void PlotResults2Terminal(void);
+        std::string git_version;
+        std::string git_checksum;
     protected:
     private:
         std::vector<std::string> files_to_scan;
@@ -31,6 +33,7 @@ class ECUXMLCreator
         std::string endianness;
         int station_address;
         tinyxml2::XMLError eResult;
+
 };
 
 #endif // ECUXMLCREATOR_H

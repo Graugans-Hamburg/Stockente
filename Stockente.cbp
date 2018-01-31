@@ -11,7 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Ticket_37/test.xml -s /home/mattes/Projekte/50_Stockente/Ticket_37/power_supply.c -s /home/mattes/Projekte/50_Stockente/Ticket_37/CCP_driver.h -x /home/mattes/Projekte/50_Stockente/Ticket_37/Lama_IDE_Test5.map -e big" />
+				<Option parameters="-t /home/mattes/Projekte/50_Stockente/Ticket_50/test.xml -s /home/mattes/Projekte/50_Stockente/Ticket_50/power_supply.c -s /home/mattes/Projekte/50_Stockente/Ticket_50/CCP_driver.h -x /home/mattes/Projekte/50_Stockente/Ticket_50/Lama_IDE_Test5.map -e big" />
 				<Compiler>
 					<Add option="-std=c++11" />
 					<Add option="-g" />
