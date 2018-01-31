@@ -5,8 +5,8 @@ ECUXMLCreator::ECUXMLCreator()
     //Default values
     station_address = 0;
     endianness = "little";
-    git_version  = "v1.4";
-    git_checksum = "b2ee096fbc0b98a58bc24f0b86a7fc8d7f2b4a93";
+    git_version  = "only known for a release";
+    git_checksum = "only known for a release";
 }
 
 ECUXMLCreator::~ECUXMLCreator()
