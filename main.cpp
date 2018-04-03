@@ -168,6 +168,7 @@ int main(int argc, char *argv[])
 
     xml_creator.ScanSourceCodeFiles();
     xml_creator.ScanAddressMapFiles();
+    xml_creator.ScanForTwinsAndRemove();
     xml_creator.CreateXMLFile();
     xml_creator.PlotResults2Terminal();
 

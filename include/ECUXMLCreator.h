@@ -19,6 +19,7 @@ class ECUXMLCreator
         void Add_source_code(std::string source_file_name_full_path);
         int ScanSourceCodeFiles(void);
         int ScanAddressMapFiles(void);
+        int ScanForTwinsAndRemove(void);
         int ScanForStationAddress(std::string& one_line_from_xml_file);
         void CreateXMLFile(void);
         void PlotResults2Terminal(void);

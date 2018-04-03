@@ -361,3 +361,35 @@ void ECUXMLCreator::Set_endianness(std::string str_endianness)
               << "Endianness will be set to little instead" << std::endl;
 }
 
+/*******************************************************************************************
+* Function: This function is scanning the extracted ECU-variables and if the same variable
+*           had been found twice, then this one will be removed. This can happen if the
+*           same file (or a link to the file) is handed over twice as an argument.
+*           The scan will be done by checking the addresses.
+******************************************************************************************/
+int ECUXMLCreator::ScanForTwinsAndRemove(void)
+{
+    std::cout << "Start to reanalyse the extracted objects for twins (Objects with the same address)." << std::endl;
+    ECU_variable base_CCP_Variable, test_CCP_Variable;
+    int number_of_erased_elements = 0;
+    for(unsigned int idx = 0; idx < CCP_Variables.size() -1 ; idx++)
+    {
+        base_CCP_Variable = CCP_Variables.at(idx);
+        unsigned int idy = idx+1;
+        while(idy < CCP_Variables.size())
+        {
+            test_CCP_Variable = CCP_Variables.at(idy);
+            if(base_CCP_Variable.GetAddress() == test_CCP_Variable.GetAddress())
+            {
+                std::cout << "Twin found. The following object will be erased (same address):";
+                std::cout << " Name: " << test_CCP_Variable.GetName() << std::endl;
+                CCP_Variables.erase(CCP_Variables.begin() + idy);
+            }
+            else
+            {
+                idy++;
+            }
+        }
+    }
+    return number_of_erased_elements;
+}
