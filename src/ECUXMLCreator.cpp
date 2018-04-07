@@ -7,6 +7,8 @@ ECUXMLCreator::ECUXMLCreator()
     endianness = "little";
     git_version  = "only known for a release";
     git_checksum = "only known for a release";
+    number_of_homeless = 0;
+    number_of_twins = 0;
 }
 
 ECUXMLCreator::~ECUXMLCreator()
@@ -325,11 +327,21 @@ void ECUXMLCreator::PlotResults2Terminal(void)
 /* Start to print the results of the program execution */
     std::cout << std::endl << std::endl;
     std::cout << "------------Results------------------------------------" << std::endl;
-    std::cout << "Number of CCP Variables: " << CCP_Variables.size() << std::endl;
-    std::cout << "CCP_Station Address    : " << station_address << std::endl;
-    std::cout << "ECU Endianness         : " << endianness << std::endl;
+    std::cout << "Number of CCP Variables : " << CCP_Variables.size() << std::endl;
+    std::cout << "CCP_Station Address     : " << station_address << std::endl;
+    std::cout << "ECU Endianness          : " << endianness << std::endl;
+    if(number_of_twins != 0)
+    {
+        std::cout << "Warning, removed twins  : " << number_of_twins << std::endl;
+    }
+    if(number_of_homeless != 0)
+    {
+        std::cout << "Warning, homeless Add=0 : " << number_of_homeless << std::endl;
+
+    }
     if(eResult == 0)
     {
+
         std::cout << "The VarFile creation was successful" << std::endl;
         std::cout << "New Varfile: "  << result_file_name << std::endl;
     }
@@ -384,6 +396,7 @@ int ECUXMLCreator::ScanForTwinsAndRemove(void)
                 std::cout << "Twin found. The following object will be erased (same address):";
                 std::cout << " Name: " << test_CCP_Variable.GetName() << std::endl;
                 CCP_Variables.erase(CCP_Variables.begin() + idy);
+                number_of_twins++;
             }
             else
             {
@@ -392,4 +405,26 @@ int ECUXMLCreator::ScanForTwinsAndRemove(void)
         }
     }
     return number_of_erased_elements;
+}
+
+/*******************************************************************************************
+* Function: This function is scanning the extracted ECU-variables for objects which have
+*           no valid address. A valid address is one everything, except 0. The functione
+*           is returning the number of objects with the address 0.
+******************************************************************************************/
+int ECUXMLCreator::CheckForVariablesWithoutAddress(void)
+{
+    std::cout << "Start to reanalyse the extracted objects for homeless variables (address = 0)." << std::endl;
+    ECU_variable base_CCP_Variable;
+    for(unsigned int idx = 0; idx < CCP_Variables.size(); idx++)
+    {
+        base_CCP_Variable = CCP_Variables.at(idx);
+        if(base_CCP_Variable.GetAddress() == 0)
+        {
+            std::cout << "Homeless variable found (address = 0):";
+            std::cout << "Name: " << base_CCP_Variable.GetName() << std::endl;
+            number_of_homeless++;
+        }
+    }
+    return number_of_homeless;
 }

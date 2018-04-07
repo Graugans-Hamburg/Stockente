@@ -20,6 +20,7 @@ class ECUXMLCreator
         int ScanSourceCodeFiles(void);
         int ScanAddressMapFiles(void);
         int ScanForTwinsAndRemove(void);
+        int CheckForVariablesWithoutAddress(void);
         int ScanForStationAddress(std::string& one_line_from_xml_file);
         void CreateXMLFile(void);
         void PlotResults2Terminal(void);
@@ -34,6 +35,10 @@ class ECUXMLCreator
         std::string endianness;
         int station_address;
         tinyxml2::XMLError eResult;
+
+        //Log warning
+        int number_of_twins;
+        int number_of_homeless;
 
 };
 
